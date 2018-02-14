@@ -1,0 +1,26 @@
+{
+    "name": "CakePG/CakeLocation",
+    "description": "CakeLocation plugin for CakePHP",
+    "type": "cakephp-plugin",
+    "license": "MIT",
+    "require": {
+        "cakephp/cakephp": "^3.5",
+        "cakedc/users": "^5.2",
+        "friendsofcake/search": "4.*",
+        "josegonzalez/cakephp-upload": "3.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7|^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "CakePG\\CakeLocation\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CakePG\\CakeLocation\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    }
+}

@@ -1,0 +1,11 @@
+msgid "Location"
+msgstr "場所リスト"
+
+msgid "Dashboard"
+msgstr "ダッシュボード"
+
+msgid "Website Admin Title"
+msgstr "ウェブサイト管理"
+
+msgid "Website Title"
+msgstr "ウェブサイト"
