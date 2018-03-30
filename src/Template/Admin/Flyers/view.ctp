@@ -36,7 +36,7 @@
         <dt>状態</dt>
         <dd><?= $flyer->published_msg ?></dd>
 
-        <dt>名前</dt>
+        <dt>題名</dt>
         <dd><?= h($flyer->name) ?></dd>
 
         <dt>掲載期間</dt>

@@ -32,7 +32,7 @@
     <div class="card-body">
       <?= $this->Form->create($flyer, ['type' => 'file', 'templates' => 'app_form_bootstrap']); ?>
       <?php
-        echo $this->Form->control('name',['label' => '名前', 'class' => 'form-control']);
+        echo $this->Form->control('name',['label' => '題名', 'class' => 'form-control']);
         echo $this->Form->control('opened_at',['label' => '掲載開始日時', 'type' => 'text', 'class' => 'form-control flattimepickr']);
         echo $this->Form->control('closed_at',['label' => '掲載終了日時', 'type' => 'text', 'class' => 'form-control flattimepickr']);
         echo $this->Form->control('locations._ids', ['label' => '掲載'.__d('CakeLocation', 'Location'), 'type' => 'multicheckbox', 'options' => $locations]);

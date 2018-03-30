@@ -41,7 +41,7 @@
     <thead>
       <tr>
         <th class="ids">状態</th>
-        <th><?= $this->Paginator->sort('name', '名前') ?></th>
+        <th><?= $this->Paginator->sort('name', '題名') ?></th>
         <th><?= $this->Paginator->sort('closed_at', '掲載期間') ?></th>
         <th class="actions">操作</th>
       </tr>
