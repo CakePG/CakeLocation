@@ -6,6 +6,7 @@ $config = [
     'dashboard_path' => '/admin',
     'limit' => 5,
     'fixed_num' => false,
+    'use_flyer' => false,
     'enables' => [
       'name' => true,
       'postal' => true,

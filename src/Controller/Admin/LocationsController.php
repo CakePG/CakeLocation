@@ -16,13 +16,6 @@ class LocationsController extends AppController
         ]);
     }
 
-    public function beforeFilter(Event $event) {
-        parent::beforeFilter($event);
-        $this->set('limit', Configure::read('CakeLocation.limit'));
-        $this->set('fixedNum', Configure::read('CakeLocation.fixed_num'));
-        $this->set('enables', Configure::read('CakeLocation.enables'));
-    }
-
     public function index()
     {
         $locations = $this->paginate($this->Locations, [

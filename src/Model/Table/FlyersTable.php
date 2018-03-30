@@ -5,17 +5,19 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Core\Configure;
 use Cake\Utility\Text;
+use Cake\I18n\Time;
+use Cake\ORM\TableRegistry;
 
-class LocationsTable extends Table
+class FlyersTable extends Table
 {
     public function initialize(array $config)
     {
         $this->addBehavior('Timestamp');
-        $this->addBehavior('CakePG/CakeLocation.SortPriority');
 
-        $this->belongsToMany('Flyers', [
-            'className' => 'CakePG/CakeLocation.Flyers',
-            'joinTable' => 'locations_flyers'
+        $this->belongsToMany('Locations', [
+            'className' => 'CakePG/CakeLocation.Locations',
+            'joinTable' => 'locations_flyers',
+            'sort' => ['Locations.priority' => 'asc']
         ]);
         // search
         $this->addBehavior('Search.Search');
@@ -28,9 +30,11 @@ class LocationsTable extends Table
                 'wildcardAny' => '*',
                 'wildcardOne' => '?',
                 'field' => [
-                    'name', 'address'
+                    'name'
                 ]
-            ]);
+            ])
+            ->add('unclosed', 'Search.Callback', ['callback' => function ($query, $args, $filter) { $query->where(['closed_at >' => Time::now()]); }])
+            ;
 
         $this->addBehavior('CakePG/CakeLocation.ImageTransformer');
         $this->addBehavior('Josegonzalez/Upload.Upload', [
@@ -146,43 +150,58 @@ class LocationsTable extends Table
     public function validationDefault(Validator $validator)
     {
         return $validator
-            ->allowEmpty('name')
-            ->allowEmpty('postal')
-            ->allowEmpty('address')
-            ->allowEmpty('tel')
-            ->allowEmpty('fax')
-            ->allowEmpty('hour')
-            ->allowEmpty('holiday')
-            ->allowEmpty('description')
-            ->allowEmpty('link1')
-            ->allowEmpty('link2')
+            ->notEmpty('name')
+            ->maxLength('name', 60, '60字以内で入力して下さい。')
 
-            ->maxLength('name', 50, '50字以内で入力して下さい。')
-            ->add('postal', 'custom', [
-                'rule' => function ($value, $context) {
-                    return (bool) preg_match('/^([0-9]{3}-[0-9]{4})?$|^[0-9]{7}+$/', $value);
-                },
-                'message' => '7桁の半角数字とハイフンで入力して下さい。'
-            ])
-            ->maxLength('address', 250, '250字以内で入力して下さい。')
-            ->add('tel', 'custom', [
-                'rule' => function ($value, $context) {
-                    return (bool) preg_match('/^[0-9]{2,5}-?[0-9]{2,5}-?[0-9]{2,5}$/', $value);
-                },
-                'message' => '電話番号の値が不正です'
-            ])
-            ->add('fax', 'custom', [
-                'rule' => function ($value, $context) {
-                    return (bool) preg_match('/^[0-9]{2,5}-?[0-9]{2,5}-?[0-9]{2,5}$/', $value);
-                },
-                'message' => 'FAX番号の値が不正です'
-            ])
-            ->maxLength('hour', 250, '250字以内で入力して下さい。')
-            ->maxLength('holiday', 250, '250字以内で入力して下さい。')
-            ->maxLength('description', 1000, '1000字以内で入力して下さい。')
-            ->maxLength('link1', 250, '250字以内で入力して下さい。')
-            ->maxLength('link2', 250, '250字以内で入力して下さい。')
+            ->notEmpty('opened_at')
+            ->datetime('opened_at', 'ymd', '日付は「yyyy-mm-dd hh:mm」の形式で入力して下さい。')
+            ->notEmpty('closed_at')
+            ->datetime('closed_at', 'ymd', '日付は「yyyy-mm-dd hh:mm」の形式で入力して下さい。')
 
+            ->add('opened_at', 'custom', [
+                'rule' => function ($value, $context) {
+                    if (empty($context['data']['closed_at'])) return true;
+                    return $context['data']['opened_at'] < $context['data']['closed_at'] ? true : false;
+                },
+                'message' => '開始日時は終了日時より後に設定して下さい。'
+            ])
+
+            ->add('locations', 'custom', [
+                'rule' => function ($value, $context) {
+                    return is_array($context['data']['locations']['_ids']) ? true : false;
+                },
+                'message' => '最低一箇所は掲載する'.__d('CakeLocation', 'Location').'を選択して下さい。'
+            ])
+            ->add('locations', 'custom', [
+                'rule' => function ($value, $context) {
+                    if (!is_array($context['data']['locations']['_ids']) || empty($context['data']['opened_at']) || empty($context['data']['closed_at'])) return true;
+                    $flyerId = empty($context['data']['id']) ? null : $context['data']['id'];
+                    $locationsTable = TableRegistry::get('CakePG/CakeLocation.Locations');
+                    foreach ($context['data']['locations']['_ids'] as $locationId) {
+                      $location = $locationsTable->get($locationId, [
+                          'contain' => ['Flyers'=> function ($q) use ($context, $flyerId) {
+                              return $q->where(
+                                [
+                                    'OR' => [
+                                        ['Flyers.opened_at <' => $context['data']['opened_at'], 'Flyers.closed_at >' => $context['data']['closed_at'], 'Flyers.id IS NOT' => $flyerId],
+                                        ['Flyers.opened_at >' => $context['data']['opened_at'], 'Flyers.closed_at <' => $context['data']['closed_at'], 'Flyers.id IS NOT' => $flyerId],
+                                        ['Flyers.opened_at <' => $context['data']['closed_at'], 'Flyers.closed_at >=' => $context['data']['closed_at'], 'Flyers.id IS NOT' => $flyerId],
+                                        ['Flyers.opened_at <=' => $context['data']['opened_at'], 'Flyers.closed_at >' => $context['data']['opened_at'], 'Flyers.id IS NOT' => $flyerId]
+                                    ]
+                                ]
+                              );
+                          }]
+                      ]);
+                      if (!empty($location->flyers) && count($location->flyers) > 0) {
+                          return false;
+                      }
+                    }
+                    return true;
+                },
+                'message' => '掲載期間が重複する'.__d('CakeLocation', 'Location').'があります。'
+            ])
+
+            ->requirePresence('file1', 'create')
             ->allowEmpty('file1')
             ->allowEmpty('dir1')
             ->allowEmpty('size1')

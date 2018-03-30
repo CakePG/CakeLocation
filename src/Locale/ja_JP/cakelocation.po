@@ -1,5 +1,8 @@
 msgid "Location"
-msgstr "場所リスト"
+msgstr "場所"
+
+msgid "Location Flyer"
+msgstr "チラシ"
 
 msgid "Dashboard"
 msgstr "ダッシュボード"
