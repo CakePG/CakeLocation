@@ -28,7 +28,7 @@
       </nav>
     </div>
     <div class="card-body">
-      <?= $this->Form->create($flyer, ['type' => 'file', 'templates' => 'app_form_bootstrap']); ?>
+      <?= $this->Form->create($flyer, ['type' => 'file', 'templates' => 'app_form_bootstrap', 'class' => 'form-img-preview']); ?>
       <?php
         echo $this->Form->control('name',['label' => '題名', 'class' => 'form-control']);
         echo $this->Form->control('opened_at',['label' => '掲載開始日時', 'type' => 'text', 'class' => 'form-control flattimepickr']);
@@ -42,7 +42,7 @@
           </div>
           <div class="col-md-8">
             <?php if (!empty($flyer->file1)): ?>
-            <img class="img-thumbnail" src="<?= $flyer->file1_asset_url ?>" alt="<?= h($flyer->name) ?>">
+            <img class="img-thumbnail" id="uploadid1img" src="<?= $flyer->file1_asset_url ?>" alt="<?= h($flyer->name) ?>">
             <div class="file-delete row">
               <div class="col">登録済み</div>
               <label class="col-md-auto">
@@ -50,10 +50,12 @@
                 <?= $this->Form->control('file1_delete', ['label'=>false, 'class'=>'form-control', 'type'=>'checkbox']); ?>
               </label>
             </div>
+            <?php else: ?>
+              <img class="img-thumbnail d-none" id="uploadid1img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="">
             <?php endif; ?>
           </div>
       </div>
-      <?= $this->Form->control('file1', ['label'=>false, 'class'=>'form-control', 'type'=>'file']); ?>
+      <?= $this->Form->control('file1', ['label'=>false, 'class'=>'form-control', 'type'=>'file', 'id'=>'uploadid1']); ?>
 
       <div class="form-group row mt-2 mb-2">
           <div class="col-md-3 col-form-label">
@@ -61,7 +63,7 @@
           </div>
           <div class="col-md-8">
             <?php if (!empty($flyer->file2)): ?>
-            <img class="img-thumbnail" src="<?= $flyer->file2_asset_url ?>" alt="<?= h($flyer->name) ?>">
+            <img class="img-thumbnail" id="uploadid2img" src="<?= $flyer->file2_asset_url ?>" alt="<?= h($flyer->name) ?>">
             <div class="file-delete row">
               <div class="col">登録済み</div>
               <label class="col-md-auto">
@@ -69,10 +71,12 @@
                 <?= $this->Form->control('file2_delete', ['label'=>false, 'class'=>'form-control', 'type'=>'checkbox']); ?>
               </label>
             </div>
+            <?php else: ?>
+              <img class="img-thumbnail d-none" id="uploadid2img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="">
             <?php endif; ?>
           </div>
       </div>
-      <?= $this->Form->control('file2', ['label'=>false, 'class'=>'form-control', 'type'=>'file']); ?>
+      <?= $this->Form->control('file2', ['label'=>false, 'class'=>'form-control', 'type'=>'file', 'id'=>'uploadid2']); ?>
 
       <?= $this->Form->submit('保存', ['class' => 'btn btn-lg btn-primary btn-block']) ?>
       <?= $this->Form->end() ?>
