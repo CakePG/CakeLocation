@@ -52,7 +52,7 @@
               <label for="title">画像1</label>
             </div>
             <div class="col-md-8">
-              <?php if (!empty($location->file1)): ?>
+              <?php if (!empty($location->file1) && !$location->isNew() && $location->getOriginal('file1')): ?>
               <img class="img-thumbnail" id="uploadid1img" src="<?= $location->file1_asset_url ?>" alt="<?= h($location->name) ?>">
               <div class="file-delete row">
                 <div class="col">登録済み</div>
@@ -75,7 +75,7 @@
               <label for="title">画像2</label>
             </div>
             <div class="col-md-8">
-              <?php if (!empty($location->file2)): ?>
+              <?php if (!empty($location->file2) && !$location->isNew() && $location->getOriginal('file2')): ?>
               <img class="img-thumbnail" id="uploadid2img" src="<?= $location->file2_asset_url ?>" alt="<?= h($location->name) ?>">
               <div class="file-delete row">
                 <div class="col">登録済み</div>

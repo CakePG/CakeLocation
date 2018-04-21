@@ -43,7 +43,7 @@
             <label for="title">画像1</label>
           </div>
           <div class="col-md-8">
-            <?php if (!empty($flyer->file1)): ?>
+            <?php if (!empty($flyer->file1) && !$flyer->isNew() && $flyer->getOriginal('file1')): ?>
             <img class="img-thumbnail" id="uploadid1img" src="<?= $flyer->file1_asset_url ?>" alt="<?= h($flyer->name) ?>">
             <div class="file-delete row">
               <div class="col">登録済み</div>
@@ -64,7 +64,7 @@
             <label for="title">画像2</label>
           </div>
           <div class="col-md-8">
-            <?php if (!empty($flyer->file2)): ?>
+            <?php if (!empty($flyer->file2) && !$flyer->isNew() && $flyer->getOriginal('file2')): ?>
             <img class="img-thumbnail" id="uploadid2img" src="<?= $flyer->file2_asset_url ?>" alt="<?= h($flyer->name) ?>">
             <div class="file-delete row">
               <div class="col">登録済み</div>
