@@ -166,7 +166,7 @@ class FlyersTable extends Table
                 'message' => '開始日時は終了日時より後に設定して下さい。'
             ])
 
-            ->add('locations', 'custom', [
+            ->add('locations', 'custom_present', [
                 'rule' => function ($value, $context) {
                     return is_array($context['data']['locations']['_ids']) ? true : false;
                 },
