@@ -34,13 +34,16 @@
         echo $this->Form->control('opened_at',['label' => '掲載開始日時', 'type' => 'text', 'class' => 'form-control flattimepickr']);
         echo $this->Form->control('closed_at',['label' => '掲載終了日時', 'type' => 'text', 'class' => 'form-control flattimepickr']);
       ?>
-      <div class="bulk-check"><?= $this->Form->control('locations._ids', ['label' => '掲載'.__d('CakeLocation', 'Location'), 'type' => 'multicheckbox', 'options' => $locations]); ?></div>
-      <div class="form-group row mb-2">
-          <div class="offset-md-3 col-md-8">
+      <div class="form-group row mt-2 mb-0">
+          <div class="col-md-3 col-form-label">
+            <label class="mb-0" for="title">掲載<?= __d('CakeLocation', 'Location') ?></label>
+          </div>
+          <div class="col-md-8 pt-1">
             <a href="#bulk_check" class="bulk-check-all btn btn-sm btn-primary"><i class="fa fa-check-square" aria-hidden="true"></i>全チェック</a>
             <a href="#bulk_check_clear" class="bulk-check-clear btn btn-sm btn-secondary"><i class="fa fa-square-o" aria-hidden="true"></i>全解除</a>
           </div>
       </div>
+      <div class="bulk-check"><?= $this->Form->control('locations._ids', ['label' => false, 'type' => 'multicheckbox', 'options' => $locations]); ?></div>
 
       <div class="form-group row mt-2 mb-2">
           <div class="col-md-3 col-form-label">
