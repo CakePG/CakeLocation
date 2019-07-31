@@ -17,6 +17,11 @@ class LocationsTable extends Table
             'className' => 'CakePG/CakeLocation.Flyers',
             'joinTable' => 'locations_flyers'
         ]);
+
+        $this->belongsToMany('Employments', [
+            'className' => 'CakePG/CakeLocation.Employments',
+            'joinTable' => 'locations_employments'
+        ]);
         // search
         $this->addBehavior('Search.Search');
         $this->searchManager()

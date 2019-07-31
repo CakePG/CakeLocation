@@ -4,6 +4,9 @@ msgstr "場所"
 msgid "Location Flyer"
 msgstr "チラシ"
 
+msgid "Location Employment"
+msgstr "勤務希望店舗"
+
 msgid "Dashboard"
 msgstr "ダッシュボード"
 
